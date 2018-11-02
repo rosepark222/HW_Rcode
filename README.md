@@ -39,7 +39,7 @@ I began with training RNN using bare minimum trace data (a set of x and y pairs)
 
 Following the work by Marti and Bunke [2001], I have added 13 offline features in addition to two x and y trace points. The image reconstruction and feature extraction was implemented using NumPy in Python because the same image reconstruction steps are required during the recognition. Therefore, total 15 features for each original stroke were paired with appropriate labels for the RNN training. Reconstructed images in text format were also efficient for visual checking of the data. Incorrect labelings were identified and removed from the training data set. 
 
-## Credit
+## Reference
 
 Marti, U. V., & Bunke, H. (2001). Using a statistical language model to improve the performance of an HMM-based cursive handwriting recognition system. International journal of Pattern Recognition and Artificial intelligence, 15(01), 65-90.
 
