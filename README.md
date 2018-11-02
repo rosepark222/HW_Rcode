@@ -25,7 +25,7 @@ Inspecting individual strokes were time consuming work. However, valuable charac
 
 
 
-Training of RNN was begun with utilizing bare minimum trace data (a set of x and y pairs). Using bidirectional RNN helped in a big way for improving the accuracy, yet there was more room to improve. For this, offline feature extraction was performed after  binary images were reconstructed from each stroke data, as shown below. Features were extracted from reconstructed images after a set of image processing such as interpolation, and gaussian filtering to reduce the noise (see below).
+For initial training of RNN, bare minimum trace data (a set of x and y pairs) were used. Using bidirectional RNN helped in a big way for improving the accuracy, yet there was more room to improve. For this, offline feature extraction was performed after  binary images were reconstructed from each stroke data, as shown below. Features were extracted from reconstructed images after a set of image processing such as interpolation, and gaussian filtering to reduce the noise (see below).
 
 
 <img width="217" alt=" y image " src="https://user-images.githubusercontent.com/38844805/47930446-2eb06c80-de89-11e8-80a3-e0d364838223.png">
