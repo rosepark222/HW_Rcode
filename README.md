@@ -4,6 +4,7 @@ Overview of the project: Imagine a kid works on math problems in her iPad softwa
 
 I think the best way to have the feel for this project is to dabble with the deployment in the Google cloud:http://pradoxum001.appspot.com/
 
+----
 inkML files record online mathematics equation handwritten strokes in XML like format. This project used CROHME competitions 2011, 2012, 2013, and 2014 and extracted stroke data. The following shows an example of math equation in a single file. All strokes are labeled with names of symbols and the sequence in which each stroke was drawn.
 
  
