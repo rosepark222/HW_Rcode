@@ -40,6 +40,5 @@ Please see https://github.com/rosepark222/HW_symbol_learn  for more detail about
 
 Marti, U. V., & Bunke, H. (2001). Using a statistical language model to improve the performance of an HMM-based cursive handwriting recognition system. International journal of Pattern Recognition and Artificial intelligence, 15(01), 65-90.
 
-Muñoz, F. Á. (2015). Mathematical Expression Recognition based on Probabilistic Grammars (Doctoral dissertation).
 
  
