@@ -27,12 +27,12 @@ Inspecting individual stroke for detecting mislabeling is a time consuming work,
 <img width="371" alt="how to write 1" src="https://user-images.githubusercontent.com/38844805/47929866-8a79f600-de87-11e8-9f4b-56ff1b87bba7.png">
 
 
-Initially, only trace data (a set of x and y pairs) were fed to RNN. Using bidirectional RNN was helpful for improving the classification accuracy. In addition, addtional offline features were extracted and used in the training. First, binary images were reconstructed from each stroke data, then 3x3 gaussian fileter was applied to generate gray scale images (see below). 
+Initially, only trace data (a set of x and y pairs) were fed to RNN. Using bidirectional RNN was helpful for improving the classification accuracy. In addition, addtional offline features were extracted and used in the training. First, binary images were reconstructed from each stroke data, then 3x3 gaussian fileter was applied to generate gray scale images (0-255). Lastly, gray scale images were digitized (see below). Note that values greater than 1 in the Figure are encoded only for visual inspection. For example, 9 indicates original trace points prior to the interpolation.
 
 
 <img width="217" alt=" y image " src="https://user-images.githubusercontent.com/38844805/47930446-2eb06c80-de89-11e8-80a3-e0d364838223.png">
 
-Gray scale images were digitized and 13 features were extracted following Marti and Bunke [2001]. The image reconstruction and feature extraction were implemented in Python because the same feature extraction logic must be used in the deployment. A total of 15 features (2 trace + 13 offline features) for each trace point were paired with appropriate label for the RNN training. Reconstructed images are in plain text format and relatively easier for visual examiniation of the data. Incorrect labels are corrected and poorly written strokes were removed from the training data set.
+13 offline features, such as first derivatives, second derivatives, vertical count of 1s at each trace point, were extracted from digitized images following Marti and Bunke [2001]. The image reconstruction and feature extraction were implemented in Python because the same feature extraction logic must be used in the deployment. A total of 15 features (2 trace + 13 offline features) for each trace point were paired with appropriate label for the RNN training. Reconstructed images are in plain text format and relatively easier for visual examiniation of the data. Incorrect labels were corrected and poorly written strokes were removed from the training data set.
 
 Please see https://github.com/rosepark222/HW_symbol_learn  for more detail about RNN training. 
 
