@@ -1,12 +1,11 @@
 # Data Perparation and Feature Extraction
 
-Overview of the project: Imagine a kid works on math problems in her iPad software and she writes down her answer using Apple Pencil. When iPad recognizes her answer is wrong, it will provide relevant mini problems to help her to learn necessary concepts to solve the original math problem. Meanwhile, her misconceptions are analyzed from her math equation answer and appropriate feedback will be generated for her teachers or parents. This project is a baby step for this lofty goal. An essential technique of this learning platform is Handwritten Recognition System for Math Equations. As of today, a bidirectional RNN has been trained to recognize 53 math strokes (not symbols -- details comes below). Additional processing is planned to bring this recognition to symbol and equation level for complete math equation recognition.
+Overview of the project: Imagine a learner works on math problems in her iPad software and she writes down her answer in a math equation form using Apple Pencil. When education software recognizes an incorrect ansewr, it will provide relevant feedback to her so that she can learn necessary concepts to solve the original problem. Meanwhile, her misconceptions are analyzed from her answer and appropriate insights will be generated for relevant stake holders - her teachers or parents. This project is an initial step for this goal using the latest machine learning technique. An essential technique for this learning ecosystem is Handwritten Recognition System for Math Equations. In this project, a bidirectional RNN has been trained to recognize 53 math strokes (not symbols -- details comes below). Future developments are planned for complete math equation recognition.
 
-I think the best way to have the feel for this project is to dabble with the deployment in the Google cloud:http://pradoxum001.appspot.com/
+The best way to have the feel for this project is to dabble with the deployment in the Google cloud: http://pradoxum001.appspot.com/
 
 ----
-inkML files record online mathematics equation handwritten strokes in XML like format. This project used CROHME competitions 2011, 2012, 2013, and 2014 and extracted stroke data. The following shows an example of math equation in a single file. All strokes are labeled with names of symbols and the sequence in which each stroke was drawn.
-
+inkML files record online mathematics equation handwritten strokes in a format similar to XML. Within inkML files, strokes are labeled with names of symbol and the sequence in which each stroke was drawn. This project extracted strokes from CROHME competitions 2011, 2012, 2013, and 2014 data sets. The following example shows a math equation in one of the inkML files. 
  
 <img width="756" alt="screen shot 2018-09-07 at 4 52 30 pm" src="https://user-images.githubusercontent.com/38844805/47914105-9a7be080-de5b-11e8-9729-c08953b65659.png">
 
