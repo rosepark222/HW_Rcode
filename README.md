@@ -22,23 +22,24 @@ The above example illusrates that the two strokes are combined to form a single 
 <img width="798" alt="labeling" src="https://user-images.githubusercontent.com/38844805/47914244-183fec00-de5c-11e8-9d09-a04609e0bd68.png">
 
  
-Inspecting individual stroke for detecting mislabeling is a time consuming work, especially for a large data sets. However, valuable characteristics of each stroke can be identified during this exploratory work. For example, a visual inspection revealed that strokes for number '1' are typically written in the following way. Thus, a typical straight vertical line won't be recognized as 1.
+Inspecting individual stroke for detecting mislabeling is a time consuming work, especially for a large data sets. However, valuable characteristics of each stroke can be identified during this exploratory work. For example, a visual inspection revealed that strokes for number '1' are typically written in the following way. Thus, a typical straight vertical line won't be recognized as 1. Red dots indicate the first 50% of points in the stroke.
 
 <img width="371" alt="how to write 1" src="https://user-images.githubusercontent.com/38844805/47929866-8a79f600-de87-11e8-9f4b-56ff1b87bba7.png">
 
 
-
-For initial training of RNN, bare minimum trace data (a set of x and y pairs) were used. Using bidirectional RNN helped in a big way for improving the accuracy, yet there was more room to improve. For this, offline feature extraction was performed after  binary images were reconstructed from each stroke data, as shown below. Features were extracted from reconstructed images after a set of image processing such as interpolation, and gaussian filtering to reduce the noise (see below).
+Initially, only trace data (a set of x and y pairs) were fed to RNN. Using bidirectional RNN was helpful for improving the classification accuracy. In addition, addtional offline features were extracted and used in the training. First, binary images were reconstructed from each stroke data, then 3x3 gaussian fileter was applied to generate gray scale images (see below). 
 
 
 <img width="217" alt=" y image " src="https://user-images.githubusercontent.com/38844805/47930446-2eb06c80-de89-11e8-80a3-e0d364838223.png">
 
-Following the work by Marti and Bunke [2001], 13 offline features was added  to two x and y trace points. The image reconstruction and feature extraction were implemented using NumPy in Python because the same image reconstruction steps were required during the recognition. Therefore, a total of 15 features for each original stroke were paired with appropriate labels for the RNN training. Reconstructed images in text format were also efficient for visual checking of the data. Incorrect labelings were identified and removed from the training data set.
+Gray scale images were digitized and 13 features were extracted following Marti and Bunke [2001]. The image reconstruction and feature extraction were implemented in Python because the same feature extraction logic must be used in the deployment. A total of 15 features (2 trace + 13 offline features) for each trace point were paired with appropriate label for the RNN training. Reconstructed images are in plain text format and relatively easier for visual examiniation of the data. Incorrect labels are corrected and poorly written strokes were removed from the training data set.
+
+Please see https://github.com/rosepark222/HW_symbol_learn  for more detail about RNN training. 
 
 ## Reference
 
 Marti, U. V., & Bunke, H. (2001). Using a statistical language model to improve the performance of an HMM-based cursive handwriting recognition system. International journal of Pattern Recognition and Artificial intelligence, 15(01), 65-90.
 
 
-Goto https://github.com/rosepark222/HW_symbol_learn  for more reading about RNN training. 
+
  
