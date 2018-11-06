@@ -400,17 +400,15 @@ add_trace_bb <- function (total_trace,  xz = FALSE, yz = FALSE, regular = TRUE, 
   for (i in 1:nrow( total_trace)) {
   #for (i in 1:1) {
     aa = data.table( str_to_dots( total_trace[i, trace], xzero = xz, yzero=yz )  ) #base for x, y are zeros
+    nrow_aa = nrow(aa)
     
     if(verbose) { print(aa) }
     
     rang.x = range(aa$x)
     rang.y = range(aa$y)
-    
-    
 
-    
     total_trace[i , "trace":= gsub("[\r\n]", "", total_trace[i , trace]) ]
-    total_trace[i, "dot.count" := nrow(aa)]
+    total_trace[i, "dot.count" := nrow_aa]
     total_trace[i, "x1" := rang.x[1]]
     total_trace[i, "x2" := rang.x[2]]  
     total_trace[i, "y1" := rang.y[1]]
@@ -453,16 +451,16 @@ add_trace_bb <- function (total_trace,  xz = FALSE, yz = FALSE, regular = TRUE, 
         center.x.r = mean( rang.x ) *100/ ( max_range ) # regularized center
         center.y.r = mean( rang.y ) *100/ ( max_range ) # regularized center
         
-       for( j in 1: nrow(aa)) {
+       for( j in 1: nrow_aa) {
          x.r[j] = aa[j,x]*90/ ( max_range )  + 5   # x will be between 5 - whatever size
          y.r[j] = aa[j,y]*90/ ( max_range )  + 5   # y will be between 5 - 95  (leaving margine of 5 top and bottom)
          
-         rel.x = x.r[j]- center.x.r
-         rel.y = y.r[j]- center.y.r         
-         d.r[j] = sqrt(rel.x^2 + rel.y^2) 
-         r.r[j] = atan2( rel.y, rel.x) * 100 / pi #angle range from 0 to pi in SE to SW angles and 0 to -pi in NE to NW angles
          
          if(add_distance_angle) {
+           rel.x = x.r[j]- center.x.r
+           rel.y = y.r[j]- center.y.r         
+           d.r[j] = sqrt(rel.x^2 + rel.y^2) 
+           r.r[j] = atan2( rel.y, rel.x) * 100 / pi #angle range from 0 to pi in SE to SW angles and 0 to -pi in NE to NW angles
            regul.trace[j] = sprintf("%5.3f %5.3f %5.3f %5.3f", x.r[j], y.r[j], d.r[j], r.r[j]);
          } else {
            regul.trace[j] = sprintf("%5.3f %5.3f", x.r[j], y.r[j]);
@@ -491,9 +489,13 @@ add_trace_bb <- function (total_trace,  xz = FALSE, yz = FALSE, regular = TRUE, 
     total_trace[i, "sd.x" := sd(aa$x)]
     total_trace[i, "sd.y" := sd(aa$y)]
     total_trace[i, "slope" := cor( aa$x, aa$y ) *sd(aa$y)/sd(aa$x)]
-    total_trace[i , "xy.ratio" := (y2-y1)/(x2-x1)]
-    total_trace[i , "symbolet" := paste(symbol, num_trace, tracelet_id, sep="_")]
+    total_trace[i, "xy.ratio" := (y2-y1)/(x2-x1)]
+    total_trace[i, "symbolet" := paste(symbol, num_trace, tracelet_id, sep="_")]
     
+    total_trace[i, "first.x" := x.r[1]]
+    total_trace[i, "first.y" := y.r[1]]
+    total_trace[i, "last.x" := x.r[nrow_aa]]
+    total_trace[i, "last.y" := y.r[nrow_aa]]
     
     #add new feature this place, between trace_regular and the last variable (symbol_final), which will be added by symbol_label_cleaner
     # add locations of begin and end points x_begin_prop, y_begin_prop, x_end_prop, y_begin_prop --- does a have two beginning point?
@@ -582,7 +584,7 @@ symbol_label_cleaner <- function ( e, shuffle = FALSE) {
   #k`k`k`k`k`k`k`k`k`k`k`k`
   e <- e[ !(symbol =="k" & (num_trace == 3)), ] #2 strokes (r + \) or (| + <) , 3 stroks (|/\)
   e <- e[ !(symbolet == 'k_2_1' | ( symbolet == 'k_2_2' & xy.ratio <= .8)),]
-  e[ (symbolet == 'k_2_2' & xy.ratio > .8), "symbol_final" := "\\lt_1_1"]  #add to less than symbol pool
+  #e[ (symbolet == 'k_2_2' & xy.ratio > .8), "symbol_final" := "\\lt_1_1"]  #add to less than symbol pool
   
   
   e <- e[ !(symbolet == "l_1_1" & xy.ratio > 2),] #upright stick cannot be used because regulrization does not create upright sticks
@@ -802,6 +804,25 @@ distance_anal <- function( str ){
   bind[, dist := sqrt((x-x_next)^2 + (y-y_next)^2)]
   return (bind)
 }
+
+first_point_location <- function (str ) {
+  dots = str_to_dots(str)
+  print(dots[1,])
+  return(dots[1,])
+}
+
+
+remove_death_note <- function(train_data, death_note) {
+  #  aaa = read.csv ("/Users/youngpark/Documents/handwritten-mathematical-expressions/library/toy_death_note.csv", header = FALSE,sep = ",", strip.white=TRUE)
+  kill = data.table( read.csv (death_note, header = FALSE,sep = ",", stringsAsFactors=FALSE, strip.white=TRUE))
+  names(kill) = c("name", "length", "symbol_final", "group_id", "erp029")
+  for (j in 1:nrow(kill)) {
+    #j = 1
+    train_data = train_data[ !(name == kill[j,name] & symbol_final == kill[j,symbol_final] & group_id == kill[j,group_id]), ]
+  }
+  return(train_data)
+}
+
 
 #dist = distance_anal(train[3, trace_regular])
 #print(dist)

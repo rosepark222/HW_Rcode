@@ -1,22 +1,22 @@
  
-source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/Rcode/helpers.R")
+source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/helpers.R")
 dir  = '/Users/youngpark/Documents/handwritten-mathematical-expressions/'
 allfiles = list.files( paste(dir, 'TrainINKML_2013', sep = "" ), pattern = "\\.inkml$", full.names = TRUE) 
 trace_data = read.trace.file(allfiles)# (allfiles[1:2])
-write.csv ( trace_data, "/Users/youngpark/Documents/handwritten-mathematical-expressions/abc_trace_data_2013.csv")
+#write.csv ( trace_data, "/Users/youngpark/Documents/handwritten-mathematical-expressions/tmp/abc_trace_data_2013.csv")
 essence = essential.strokes (trace_data ) #[ dot.count > 5 & dot.count < 250,]  #[1] 68225  nrow(essence)
 essential = add_trace_bb(essence, xz = TRUE, yz= TRUE, regular = TRUE, verbose=FALSE)
 essential = remove.short_long.dots (essential)
 #write.csv ( essential, "/Users/youngpark/Documents/handwritten-mathematical-expressions/abc_essential_data_2013.csv")
-e = symbol_label_cleaner(essential)
+big_e = symbol_label_cleaner(essential)
 #write.csv (e, "/Users/youngpark/Documents/handwritten-mathematical-expressions/abc_essence_final_2013.csv")
-nrow(e)
+nrow(big_e)
 
 
 #d(essence[ symbol == '/', trace][1])
 
 
-source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/Rcode/helpers.R")
+source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/helpers.R")
 dir  = '/Users/youngpark/Documents/handwritten-mathematical-expressions/'
 c2011_allfiles = list.files( paste(dir, 'CROHME_training_2011', sep = "" ), pattern = "\\.inkml$", full.names = TRUE) 
 c2011_trace_data = read.trace.file(c2011_allfiles)# (allfiles[1:2])
@@ -31,7 +31,7 @@ nrow(c2011_e)
 
 c2011_e[1]
 
-source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/Rcode/helpers.R")
+source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/helpers.R")
 c2012_1_allfiles = list.files( paste(dir, 'trainData_2012_part1', sep = "" ), pattern = "\\.inkml$", full.names = TRUE)
 c2012_1_trace_data = read.trace.file(c2012_1_allfiles)# (allfiles[1:2])
 #write.csv ( c2012_1_trace_data, "/Users/youngpark/Documents/handwritten-mathematical-expressions/c2012_1_abc_trace_data_2013.csv")
@@ -43,17 +43,19 @@ c2012_1_e = symbol_label_cleaner(c2012_1_essential)
 #write.csv (c2012_1_e, "/Users/youngpark/Documents/handwritten-mathematical-expressions/c2012_1_abc_essence_final_2013.csv")
 nrow(c2012_1_e)
 #d(c2012_1_e[ symbol == "2"][1, trace])
+c2012_1_e[ symbol_final == 'b_1_1', ][1]
+draw_stroke( c2012_1_e[ symbol_final == 'b_1_1' & first.y > 25, trace_regular])
 
-just_Test_only = FALSE
-if( just_Test_only ) {
-  source ("/Users/youngpark/Documents/MEMALS/Rcode/helpers.R")
-  t1 = c2012_1_essence[1:100]
-  t2 = add_trace_bb(t1, xz = TRUE, yz= TRUE, regular = TRUE, verbose=FALSE)
-  t2[1]
-  draw_stroke(t2[1, trace])
-}
+# just_Test_only = FALSE
+# if( just_Test_only ) {
+#   source ("/Users/youngpark/Documents/MEMALS/Rcode/helpers.R")
+#   t1 = c2012_1_essence[1:100]
+#   t2 = add_trace_bb(t1, xz = TRUE, yz= TRUE, regular = TRUE, verbose=FALSE)
+#   t2[1]
+#   draw_stroke(t2[1, trace])
+# }
 
-
+source ("/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/helpers.R")
 c2012_2_allfiles = list.files( paste(dir, 'trainData_2012_part2', sep = "" ), pattern = "\\.inkml$", full.names = TRUE)
 c2012_2_trace_data = read.trace.file(c2012_2_allfiles)# (allfiles[1:2])
 #write.csv ( c2012_2_trace_data, "/Users/youngpark/Documents/handwritten-mathematical-expressions/c2012_2_abc_trace_data_2013.csv")
@@ -70,12 +72,12 @@ nrow(c2012_2_e)
 # d( c2012_2_e[ symbol_final == 'g_1_1',][ 1:20, trace_regular] )
 # c2012_2_e[ , .N, by=symbol_final]
 
-nrow(e)
+nrow(big_e)
 nrow(c2011_e)
 nrow(c2012_1_e)
 nrow(c2012_2_e)
 
-a = rbind(e, c2012_1_e)
+a = rbind(big_e, c2012_1_e)
 b = rbind(a, c2012_2_e)
 c = rbind(b, c2011_e)
 nrow(c)
@@ -83,30 +85,77 @@ nrow(c)
 c[ , .N,  by=symbol_final ][order(N)]
 nrow(c)
 c[1]
-d = clean_x_2_left (c) #cleaning x_2 symbolets, it removes symbols with incorrect labels, such as
+#cleaned_data = d
+cleaned_data = clean_x_2_left (c) #cleaning x_2 symbolets, it removes symbols with incorrect labels, such as
 #x_2_right_south_west x_2_left_south_east x_2_right_CL x_2_left_CC 
 
-#nrow(d)
-d = d[ !( (corr < -.5 | corr > .5) & symbol_final == '\\lt_1_1'),]
-#nrow(e)
-d = d[ !((corr < -.5 | corr > .5) & symbol_final == '\\gt_1_1'), ]
+#I saw so many > and < are just / or \
+cleaned_data = cleaned_data[ !((corr < -.5 | corr > .5) & symbol_final == '\\lt_1_1'), ]
+cleaned_data = cleaned_data[ !((corr < -.5 | corr > .5) & symbol_final == '\\gt_1_1'), ]
+cleaned_data = cleaned_data[ !(first.y > 25    & symbol_final == 'b_1_1'), ]
+cleaned_data = cleaned_data[ !(( first.x < 25 | first.x > 80) & symbol_final == 'a_1_1'), ]
+cleaned_data = cleaned_data[ !( last.x > 250   & symbol_final == '\\sqrt_1_1'), ] #remove about 600 long sqrt
+#> train[ symbol_final == "\\sqrt_1_1" & last.x  > 200, .N] 
+
+
+hist( cleaned_data[ symbol_final == 'd_1_1', first.y]) #heavy bimodal -- both are legit
+hist( cleaned_data[ symbol_final == 'a_1_1', first.x]) #heavy bimodal -- both are legit
+
+draw_stroke(c[ symbol_final == 'a_1_1' & first.x > 80, trace_regular][1])
+#hist( cleaned_data[ symbol_final == 'a_1_1', first.x])
+
+cleaned_data[((corr < -.5 | corr > .5) & symbol_final == '\\lt_1_1'), .N ]
+train[((corr < -.5 | corr > .5) & symbol_final == '\\lt_1_1'), .N ]
+
+#cleaned_data[ symbol_final == 'b_1_1' & first.y > 25, .N] / cleaned_data[ symbol_final == 'b_1_1' , .N] *100 #9.4%
+#print( first_point_location( cleaned_data[ symbol_final == 'a_1_1' & first.y > 25, trace_regular][1]) )
+#cleaned_data[ symbol_final == 'a_1_1' & first.x < 25, .N] / cleaned_data[ symbol_final == 'a_1_1' , .N] *100 #4.18%
+#draw_stroke(cleaned_data[ symbol_final == 'a_1_1' & first.x < 25, trace_regular])
+cleaned_data[ symbol_final == 'a_1_1' & first.x > 100, .N] / cleaned_data[ symbol_final == 'a_1_1' , .N] *100 #8.14%
+
+
+cleaned_data[ symbol_final == 'd_1_1' & first.y < 20, .N] / cleaned_data[ symbol_final == 'a_1_1' , .N] *100 #4.18%
+draw_stroke(cleaned_data[ symbol_final == 'd_1_1' & first.y > 70, trace_regular][1])
+
+
+#cleaned_data[ symbol_final == 'a_1_1' & first.x < 25, .N] / cleaned_data[ symbol_final == 'a_1_1' , .N] *100 #8.5%
+#draw_stroke(cleaned_data[ symbol_final == 'a_1_1' & first.y < 15, trace_regular][1])
+
+
+#print( first_point_location( cleaned_data[ symbol_final == 'a_1_1' & first.y > 25, trace_regular][1]) )
+
+#st_2_dots = str_to_dots(cleaned_data[ symbol_final == 'a_1_1' & first.y > 25, trace_regular][1]) 
+
+
+#d[1]
 #nrow(e)
 #hist( d[ symbol_final == '\\lt_1_1', corr ])
 #hist( d[ symbol_final == 'a_1_1', corr ])
 #d = e
 #d[1]
-smp_size <- floor(0.95 * nrow(d))
-## set the seed to make your partition reproducible
+smp_size <- floor(0.95 * nrow(cleaned_data))
 set.seed(123)
-train_ind <- sample(seq_len(nrow(d)), size = smp_size)
-train <- d[train_ind, ]
-test <- d[-train_ind, ]
+train_ind <- sample(seq_len(nrow(cleaned_data)), size = smp_size)
+train <- cleaned_data[train_ind, ]
+test <- cleaned_data[-train_ind, ]
 
 nrow(train) #[1] 55778
 
 #this is improved regularization, keeping aspect ratio when regularizing.
-write.csv (train, "/Users/youngpark/Documents/handwritten-mathematical-expressions/hij_data/abc_train_clean_x_unbalanced.csv")
-write.csv (test, "/Users/youngpark/Documents/handwritten-mathematical-expressions/hij_data/abc_test_clean_x_unbalanced.csv")
+#write.csv (train, "/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/abc_train_clean_x_unbalanced.csv")
+#write.csv (test, "/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/abc_test_clean_x_unbalanced.csv")
+
+
+train_survived = remove_death_note(train, death_note = "/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/abc_death_note.csv") 
+nrow(train) - nrow(train_survived)
+write.csv (train_survived, "/Users/youngpark/Documents/handwritten-mathematical-expressions/HW_Rcode/abc_train_survived.csv")
+
+nrow(train_survived)
+#check 
+#draw_stroke( 
+#  train[ name == "/Users/youngpark/Documents/handwritten-mathematical-expressions/TrainINKML_2013/formulaire037-equation047.inkml" & symbol_final == '\\infty_1_1', trace_regular]
+#)
+
 
 #system("cd /Users/youngpark/Documents/handwritten-mathematical-expressions/library; python3 zzz_test.py")
 # if( sample_down_2_1_1 ) {   
@@ -141,3 +190,22 @@ write.csv (test, "/Users/youngpark/Documents/handwritten-mathematical-expression
 # d(train[ symbol_final == '\\sum_1_1', trace_regular][1])
 # 
 # d(train[1, trace_regular])
+
+draw_stroke( train[ symbolet == 'k_2_2' & symbol_final == '\\lt_1_1', trace_regular] )
+draw_stroke( train[symbol_final == '\\lt_1_1' & corr < -0.9 , trace_regular] )
+
+
+#train_data = train
+#train_data[1]
+# train_survived = remove_death_note(train, death_note = "/Users/youngpark/Documents/handwritten-mathematical-expressions/library/toy_death_note.csv") 
+# nrow(train_survived)
+# nrow(train)
+
+# train[ name == aaa[1,1] & symbol_final == aaa[1,3] & group_id == aaa[1,4], ]
+# train[  symbol_final == sprintf("%0s",aaa[2,3]), ]
+# train[  symbol_final == '(_1_1', ]
+# train[1]
+# 
+# 
+# nrow(train)
+
